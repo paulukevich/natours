@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
-app.use(helmet());
+app.use(helmet({ frameSrc: ["'self'", 'https:', 'data:'] }));
 
 // CONTENT SECURITY POLICY
 app.use((req, res, next) => {
@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'developement') {
   app.use(morgan('dev'));
 }
 
@@ -88,10 +88,10 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 app.use('/', viewRouter);
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
-app.use('/api/v1/bookings', bookingRouter);
+app.use('/tours', tourRouter);
+app.use('/users', userRouter);
+app.use('/reviews', reviewRouter);
+app.use('/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
